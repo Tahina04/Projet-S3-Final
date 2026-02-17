@@ -1,0 +1,36 @@
+=============================================
+INSTRUCTIONS POUR LA MISE À JOUR DE LA BASE DE DONNÉES
+=============================================
+
+Exécutez les requêtes SQL suivantes dans votre base de données:
+
+1. Ajouter la colonne prix_unitaire à la table besoins:
+---------------------------------------------
+ALTER TABLE besoins ADD COLUMN prix_unitaire DECIMAL(12,2) DEFAULT 0;
+
+2. Mettre à jour les prix unitaires (en Ariary):
+---------------------------------------------
+UPDATE besoins SET prix_unitaire = 500 WHERE nom = 'Riz' AND type_besoin = 'nature';
+UPDATE besoins SET prix_unitaire = 1500 WHERE nom = 'Huile' AND type_besoin = 'nature';
+UPDATE besoins SET prix_unitaire = 2500 WHERE nom = 'Eau' AND type_besoin = 'nature';
+UPDATE besoins SET prix_unitaire = 8000 WHERE nom = 'Tôle' AND type_besoin = 'materiaux';
+UPDATE besoins SET prix_unitaire = 2500 WHERE nom = 'Clous' AND type_besoin = 'materiaux';
+UPDATE besoins SET prix_unitaire = 5000 WHERE nom = 'Bois' AND type_besoin = 'materiaux';
+UPDATE besoins SET prix_unitaire = 1 WHERE type_besoin = 'argent';
+
+3. Créer la table achats:
+---------------------------------------------
+CREATE TABLE IF NOT EXISTS achats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    besoin_id INT NOT NULL,
+    don_argent_id INT NOT NULL,
+    quantite_achetee DECIMAL(12,2) NOT NULL,
+    prix_unitaire DECIMAL(12,2) NOT NULL,
+    montant_total DECIMAL(12,2) NOT NULL,
+    date_achat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    observations TEXT,
+    FOREIGN KEY (besoin_id) REFERENCES besoins(id) ON DELETE CASCADE,
+    FOREIGN KEY (don_argent_id) REFERENCES dons(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+=============================================
